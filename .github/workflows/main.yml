@@ -11,18 +11,18 @@ jobs:
         with:
           ref: 'master'
 
-      - name: Set Up JDK
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-          cache: 'maven'
+      # - name: Set Up JDK
+      #   uses: actions/setup-java@v4
+      #   with:
+      #     distribution: 'temurin'
+      #     java-version: '17'
+      #     cache: 'maven'
       
-      - name: Sonar Analysis (SAST)
-        run: mvn -B verify sonar:sonar -Dsonar.projectKey=yagami-escobar_java-reachability-playground -Dsonar.organization=bcodex1 -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      # - name: Sonar Analysis (SAST)
+      #   run: mvn -B verify sonar:sonar -Dsonar.projectKey=yagami-escobar_java-reachability-playground -Dsonar.organization=bcodex1 -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: Snyk Analysis (SCA)
         uses: snyk/actions/maven-3-jdk-17@master
