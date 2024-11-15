@@ -14,4 +14,9 @@ public class Butler {
 
         System.out.println(ListUtils.union(list1, list2));
     }
+
+    // public static void main(String[] args) {
+    //     Butler butler = new Butler();
+    //     butler.welcome();
+    // }
 }

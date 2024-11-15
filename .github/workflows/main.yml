@@ -1,12 +1,39 @@
 name: Example workflow for Maven using Snyk
-on: push
+on: 
+  push:
+    branches: ['master']
 jobs:
   security:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
-      - name: Run Snyk to check for vulnerabilities
+      - name: Check Out Repo
+        uses: actions/checkout@v4
+        with:
+          ref: 'main'
+      - name: Set Up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+          cache: 'maven'
+      
+      - name: Sonar Analysis (SAST)
+        run: mvn -B verify sonar:sonar -Dsonar.projectKey=yagami-escobar_java-reachability-playground -Dsonar.organization=bcodex1 -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      - name: Snyk Analysis (SCA)
         uses: snyk/actions/maven@master
         continue-on-error: true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+      # - name: ZAP Scan (DAST)
+      #   uses: zaproxy/action-full-scan@v0.11.0
+      #   with:
+      #     token: ${{ secrets.GITHUB_TOKEN }}
+      #     docker_name: 'ghcr.io/zaproxy/zaproxy:stable'
+      #     target: '?'
+      #     rules_file_name: '.zap/rules.tsv'
+      #     cmd_options: '-a'
